@@ -1,0 +1,16 @@
+---
+title: "Models of perception and action exam"
+author: "Astrid Iversen"
+date: "31/5/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Code for exame questions go here:
+```{r}
+
+```
+
