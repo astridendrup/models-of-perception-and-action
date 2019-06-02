@@ -1,0 +1,79 @@
+---
+title: "Motion Tracking Exercise"
+author: "Sebastian"
+date: "4/11/2019"
+output: html_document
+---
+
+
+#single trial of the hand priming data in R
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+"1. Remind yourselves what we did in the study and what we expected and why.
+2. Load one trial of your choice into R. The four columns refer to: sample, condition, x and y.
+3. Plot x against y.
+4. Map the y data to a more intuitive screen output with 0/0 in the lower left corner and where
+upwards movements are increasingly positive (i.e. so that it looks like the movements we made
+on the screen).
+5. Calculate the distance travelled (for x and y combined). (The euclidian distance - If you were to add a third dimension you could add a third parameter - Z)
+6. Add a time vector. I forgot to measure time so I had to estimate it post-hoc (fine for this exercise,
+not great if it was a real experiment). We can assume that each sample takes .0025 s.
+7. Calculate velocity and acceleration for y, i.e. vertical movement. Remember: Velocity = distance
+difference / time difference. Acceleration = velocity difference / time difference.
+8. Play around with some filter to smoothen velocity and acceleration (most common: Butterworth
+filter)
+"
+#Telma
+data$velextreme <- ifelse(data$velocity < 20 & data$velocity > -20, 1,0)
+# derivative of velocity is acceleration => the local maxima and minima are at those points where the derivative is 0
+
+
+ggplot(data) +
+  geom_point( aes(x_center,y_center, color = factor(velextreme), size = velextreme)) + 
+  # plot by this factor, you get the zero crossing plotted in the different color
+  labs(x = "Trajectory", y = "Height")
+
+localmax <- max(data$y_center[2200:2400])
+which(data$y_center == 267.336) # 2350
+data$colorvel<- ifelse(data$y_center == localmax ,1,0)
+
+ggplot(data) +
+  geom_point( aes(x_center,y_center, size = colorvel, color = factor(colorvel))) + 
+  #geom_point( aes(x_center,y_center, size = factor(velextreme))) +
+  # plot by this factor, you get the zero crossing plotted in the different color
+  labs(x = "Trajectory", y = "Height") +
+  theme(legend.title = element_blank(), legend.position='none')
+
+
+
+
+
+
+
+
+
+#Mikkel
+library(signal)
+p_load(GENEAclassify)
+
+hey <- butter(2, 0.1, type = "low")
+
+wip <- filtfilt(hey, df$velocityY)
+wup <- filtfilt(hey, df$accelerationY)
+
+plot(df$velocityY)
+plot(df$accelerationY)
+
+plot(wip)
+plot(wup)
+"
+9. Using zero crossings in the acceleration, calculate velocity extreme values (maxima and minima - Dots at the buttom and top of slopes).
+Mark those extreme values on top of the x/y plot you made earlier.
+10. Using e.g. a range of x positions, specify a segment during which the critical movement happens, (not just the global maxima - we're interested in the local maxima when ever people speed up in acceleration)
+i.e. the 6th movement is what we would want to compare in this study. Mark the peak in that segment in a different color."
+
+#If people are having messy data, where they might move a bit back over the old trajectory - one could make a more strict experiemental setup
+#these data have very high variability when one look at all the movement patterns
+
+
+```
